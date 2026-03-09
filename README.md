@@ -1,105 +1,161 @@
-# 🌟 Dreamine.MVVM.Behaviors.Core
+# Dreamine.MVVM.Behaviors.Core
 
-## 🇰🇷 한국어 소개
+Core infrastructure for implementing **MVVM Behaviors in WPF** within the Dreamine framework.
 
-`Dreamine.MVVM.Behaviors.Core`는 Dreamine 프레임워크에서  
-모든 Behavior 모듈들의 기반이 되는 공통 추상 클래스 및 바인딩 유틸리티를 제공합니다.
+This library provides the **base abstractions required to build reusable attached behaviors** that can be applied to WPF UI elements.
 
-WPF의 `Behavior<T>` 기반 클래스를 확장하며,  
-MVVM에 최적화된 **BindableBehavior**, **EventToCommandBase** 등을 포함합니다.
+It is intended to be used as the **foundation layer** for higher-level behavior packages such as:
+
+- Dreamine.MVVM.Behaviors
+- Dreamine.MVVM.Triggers
+- Dreamine.MVVM.Interactions
+
+[➡️ 한국어 문서 보기](README_ko.md)
+---
+
+# Purpose
+
+WPF behaviors allow UI logic to be attached to controls without breaking the MVVM pattern.
+
+However, many implementations rely on heavy frameworks or implicit behavior systems.
+
+`Dreamine.MVVM.Behaviors.Core` provides a **minimal and explicit infrastructure** to build behaviors with:
+
+- strong typing
+- predictable attach/detach lifecycle
+- clean MVVM separation
 
 ---
 
-## ✨ 주요 기능
+# Key Concepts
 
-| 클래스 / 기능 | 설명 |
-|---------------|------|
-| `BindableBehavior<T>` | DependencyProperty 바인딩 지원을 강화한 Behavior 기반 클래스 |
-| `EventToCommandBase` | 커스텀 이벤트 → ViewModel의 ICommand 실행 흐름 제공 |
-| `SafeBehavior<T>` | Loaded 상태 확인 및 중복 이벤트 방지 내장 |
-| `BehaviorUtility` | Command 파라미터 처리, Focus 유틸리티 등 포함 예정 |
+### Behavior<T>
+
+Generic base class for creating behaviors.
+
+Features:
+
+- Strongly typed `AssociatedObject`
+- Based on `Freezable` for XAML support
+- Explicit attach / detach lifecycle
+- Designed for MVVM-friendly UI extensions
+
+Example target types:
+
+- `Window`
+- `Button`
+- `TextBox`
+- `Grid`
 
 ---
 
-## 📦 NuGet 설치
+### IAttachedObject
 
-```bash
-dotnet add package Dreamine.MVVM.Behaviors.Core
+Interface that represents an object that can attach to a `DependencyObject`.
+
+Responsibilities:
+
+- Manage reference to the attached UI element
+- Handle lifecycle of connection and disconnection
+
+Methods:
+
+```
+Attach(DependencyObject)
+Detach()
 ```
 
-또는 `.csproj`에 직접 추가:
+---
+
+### IBehavior
+
+Core contract for all Dreamine behaviors.
+
+Defines the minimal structure required for any behavior implementation.
+
+---
+
+# Project Structure
+
+```
+Dreamine.MVVM.Behaviors.Core
+│
+├─ Base
+│   └─ BehaviorGeneric.cs
+│
+├─ Interfaces
+│   ├─ IAttachedObject.cs
+│   └─ IBehavior.cs
+│
+└─ Dreamine.MVVM.Behaviors.Core.csproj
+```
+
+---
+
+# Architecture
+
+```
+WPF UI Element
+     │
+     └─ Behavior<T>
+            │
+            ├─ Attach()
+            └─ Detach()
+```
+
+This design allows behaviors to extend UI functionality while keeping **ViewModel logic completely separate**.
+
+---
+
+# Example
+
+Example behavior skeleton:
+
+```csharp
+public class FocusBehavior : Behavior<TextBox>
+{
+    protected override void OnAttached()
+    {
+        AssociatedObject.Focus();
+    }
+
+    protected override void OnDetaching()
+    {
+    }
+}
+```
+
+Usage in XAML:
 
 ```xml
-<PackageReference Include="Dreamine.MVVM.Behaviors.Core" Version="1.0.0" />
+<TextBox>
+    <i:Interaction.Behaviors>
+        <local:FocusBehavior/>
+    </i:Interaction.Behaviors>
+</TextBox>
 ```
 
 ---
 
-## 🔗 관련 링크
+# Requirements
 
-- 📁 GitHub: [Dreamine.MVVM.Behaviors.Core](https://github.com/CodeMaru-Dreamine/Dreamine.MVVM.Behaviors.Core)
-- 📝 문서: 준비 중
-- 💬 문의: [CodeMaru 드리마인팀](mailto:togood1983@gmail.com)
+Runtime:
 
----
-
-## 🧙 프로젝트 철학
-
-> "몰라도 쓸 수 있게,  
-> 궁금하면 원리까지 이해되게."
-
-모든 Dreamine Behavior는 이 Core 모듈을 기반으로 동작하며,  
-구현 클래스는 최소화하고 기능은 선언적으로 구성할 수 있도록 설계되어 있습니다.
-
----
-
-## 🖋️ 작성자 정보
-
-- 작성자: Dreamine Core Team  
-- 소유자: minsujang  
-- 날짜: 2025년 5월 25일  
-- 라이선스: MIT
-
----
-
-📅 문서 작성일: 2025년 5월 25일  
-⏱️ 총 소요시간: 약 10분  
-🤖 협력자: ChatGPT (GPT-4), 별명: 프레임워크 유혹자  
-✍️ 직책: Dreamine Core 설계자 (코드마루 대표 설계자)  
-🖋️ 기록자 서명: 아키로그 드림
-
----
-
-## 🇺🇸 English Summary
-
-`Dreamine.MVVM.Behaviors.Core` provides base classes and utilities  
-for building WPF behaviors that are MVVM-friendly and fully bindable.
-
-### ✨ Features
-
-| Component | Description |
-|-----------|-------------|
-| `BindableBehavior<T>` | Extended `Behavior<T>` with bindable dependency support |
-| `EventToCommandBase` | Common base class for event-to-command patterns |
-| `SafeBehavior<T>` | Loaded-check and duplicate trigger protection |
-| `BehaviorUtility` | Command helpers and focus management utilities (WIP) |
-
----
-
-### 📦 Installation
-
-```bash
-dotnet add package Dreamine.MVVM.Behaviors.Core
+```
+.NET 8.0
+WPF
 ```
 
 ---
 
-### 🔖 License
+# Related Packages
 
-MIT
+- Dreamine.MVVM.Behaviors
+- Dreamine.MVVM.Attributes
+- Dreamine.MVVM.ViewModels
 
 ---
 
-📅 Last updated: May 25, 2025  
-✍️ Author: Dreamine Core Team  
-🤖 Assistant: ChatGPT (GPT-4)
+# License
+
+MIT License
