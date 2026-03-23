@@ -30,22 +30,22 @@ namespace Dreamine.MVVM.Behaviors.Core.Base
 		/// </summary>
 		DependencyObject IAttachedObject.AssociatedObject => AssociatedObject!;
 
-		/// <summary>
-		/// Behavior를 지정한 <paramref name="associatedObject"/>에 연결합니다.
-		/// 내부적으로 <c>AssociatedObject</c>에 저장되며, <c>OnAttached()</c>가 호출됩니다.
-		/// </summary>
-		/// <param name="associatedObject">연결할 DependencyObject (예: Window, Grid 등)</param>
-		public void Attach(DependencyObject associatedObject)
-		{
-			AssociatedObject = (T)associatedObject;
-			OnAttached();
-		}
+        /// <summary>
+        /// Behavior를 지정한 <paramref name="dependencyObject"/>에 연결합니다.
+        /// 내부적으로 <see cref="AssociatedObject"/>에 저장되며, <c>OnAttached()</c>가 호출됩니다.
+        /// </summary>
+        /// <param name="dependencyObject">연결할 DependencyObject 입니다. (예: Window, Grid 등)</param>
+        public void Attach(DependencyObject dependencyObject)
+        {
+            AssociatedObject = (T)dependencyObject;
+            OnAttached();
+        }
 
-		/// <summary>
-		/// 현재 연결된 객체와의 연결을 해제합니다.
-		/// <c>OnDetaching()</c>이 호출되고, <c>AssociatedObject</c>는 null로 초기화됩니다.
-		/// </summary>
-		public void Detach()
+        /// <summary>
+        /// 현재 연결된 객체와의 연결을 해제합니다.
+        /// <c>OnDetaching()</c>이 호출되고, <c>AssociatedObject</c>는 null로 초기화됩니다.
+        /// </summary>
+        public void Detach()
 		{
 			OnDetaching();
 			AssociatedObject = null;
