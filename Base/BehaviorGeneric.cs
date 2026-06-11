@@ -28,6 +28,10 @@ namespace Dreamine.MVVM.Behaviors.Core.Base
 		/// <summary>
 		/// <see cref="IAttachedObject"/> 인터페이스를 통해 노출되는 AssociatedObject입니다.
 		/// </summary>
+		/// <remarks>
+		/// IAttachedObject 계약상 Attach() 이후에만 접근 가능합니다.
+		/// Detach() 이후에는 null이지만 인터페이스 반환 타입은 non-nullable이므로 null-forgiving(!)을 사용합니다.
+		/// </remarks>
 		DependencyObject IAttachedObject.AssociatedObject => AssociatedObject!;
 
         /// <summary>
@@ -37,7 +41,14 @@ namespace Dreamine.MVVM.Behaviors.Core.Base
         /// <param name="dependencyObject">연결할 DependencyObject 입니다. (예: Window, Grid 등)</param>
         public void Attach(DependencyObject dependencyObject)
         {
-            AssociatedObject = (T)dependencyObject;
+            if (dependencyObject is not T typed)
+            {
+                throw new InvalidOperationException(
+                    $"Behavior<{typeof(T).Name}> requires a {typeof(T).Name} " +
+                    $"but received {dependencyObject?.GetType().Name ?? "null"}.");
+            }
+
+            AssociatedObject = typed;
             OnAttached();
         }
 
