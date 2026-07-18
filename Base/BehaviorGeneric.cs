@@ -8,37 +8,75 @@ using System.Windows;
 namespace Dreamine.MVVM.Behaviors.Core.Base
 {
 	/// <summary>
-	/// 📌 Dreamine의 제네릭 기반 Behavior 클래스입니다.
-	/// 
-	/// 연결 가능한 대상 객체를 제네릭 타입 <typeparamref name="T"/>로 명확히 지정하여,
-	/// <c>AssociatedObject</c>를 타입 캐스팅 없이 직접 사용할 수 있도록 도와줍니다.
-	/// 
-	/// Freezable을 상속하여 WPF의 리소스 시스템 및 XAML 지원을 보장하며,
-	/// IAttachedObject 인터페이스를 통해 Behavior의 연결/해제를 관리합니다.
+	/// \if KO
+	/// <para>📌 Dreamine의 제네릭 기반 Behavior 클래스입니다. 연결 가능한 대상 객체를 제네릭 타입 <typeparamref name="T"/>로 명확히 지정하여, <c>AssociatedObject</c>를 타입 캐스팅 없이 직접 사용할 수 있도록 도와줍니다. Freezable을 상속하여 WPF의 리소스 시스템 및 XAML 지원을 보장하며, IAttachedObject 인터페이스를 통해 Behavior의 연결/해제를 관리합니다.</para>
+	/// \endif
+	/// \if EN
+	/// <para>Encapsulates behavior functionality and related state.</para>
+	/// \endif
 	/// </summary>
-	/// <typeparam name="T">연결할 대상 객체의 타입 (예: Window, Grid, Button 등)</typeparam>
+	/// <typeparam name="T">
+	/// \if KO
+	/// <para>연결할 대상 객체의 타입 (예: Window, Grid, Button 등)</para>
+	/// \endif
+	/// \if EN
+	/// <para>The T type parameter.</para>
+	/// \endif
+	/// </typeparam>
 	public abstract class Behavior<T> : Freezable, IAttachedObject where T : DependencyObject
 	{
 		/// <summary>
-		/// 연결된 WPF 객체를 나타냅니다.
-		/// Behavior가 Attach되면 이 속성에 대상 객체가 설정됩니다.
+		/// \if KO
+		/// <para>연결된 WPF 객체를 나타냅니다. Behavior가 Attach되면 이 속성에 대상 객체가 설정됩니다.</para>
+		/// \endif
+		/// \if EN
+		/// <para>Gets or sets the associated object value.</para>
+		/// \endif
 		/// </summary>
 		public T? AssociatedObject { get; private set; }
 
 		/// <summary>
-		/// <see cref="IAttachedObject"/> 인터페이스를 통해 노출되는 AssociatedObject입니다.
+		/// \if KO
+		/// <para><see cref="IAttachedObject"/> 인터페이스를 통해 노출되는 AssociatedObject입니다.</para>
+		/// \endif
+		/// \if EN
+		/// <para>Gets the associated object value.</para>
+		/// \endif
 		/// </summary>
 		/// <remarks>
-		/// IAttachedObject 계약상 Attach() 이후에만 접근 가능합니다.
-		/// Detach() 이후에는 null이지만 인터페이스 반환 타입은 non-nullable이므로 null-forgiving(!)을 사용합니다.
+		/// \if KO
+		/// <para>IAttachedObject 계약상 Attach() 이후에만 접근 가능합니다. Detach() 이후에는 null이지만 인터페이스 반환 타입은 non-nullable이므로 null-forgiving(!)을 사용합니다.</para>
+		/// \endif
+		/// \if EN
+		/// <para>Describes behavior and usage considerations for this member.</para>
+		/// \endif
 		/// </remarks>
 		DependencyObject IAttachedObject.AssociatedObject => AssociatedObject!;
 
         /// <summary>
-        /// Behavior를 지정한 <paramref name="dependencyObject"/>에 연결합니다.
-        /// 내부적으로 <see cref="AssociatedObject"/>에 저장되며, <c>OnAttached()</c>가 호출됩니다.
+        /// \if KO
+        /// <para>Behavior를 지정한 <paramref name="dependencyObject"/>에 연결합니다. 내부적으로 <see cref="AssociatedObject"/>에 저장되며, <c>OnAttached()</c>가 호출됩니다.</para>
+        /// \endif
+        /// \if EN
+        /// <para>Attaches the behavior to a target object.</para>
+        /// \endif
         /// </summary>
-        /// <param name="dependencyObject">연결할 DependencyObject 입니다. (예: Window, Grid 등)</param>
+        /// <param name="dependencyObject">
+        /// \if KO
+        /// <para>연결할 DependencyObject 입니다. (예: Window, Grid 등)</para>
+        /// \endif
+        /// \if EN
+        /// <para>The dependency object to which the behavior or attached property applies.</para>
+        /// \endif
+        /// </param>
+        /// <exception cref="InvalidOperationException">
+        /// \if KO
+        /// <para>현재 객체 상태에서 Attach 작업을 수행할 수 없는 경우 발생합니다.</para>
+        /// \endif
+        /// \if EN
+        /// <para>Thrown when the attach operation is not valid for the current object state.</para>
+        /// \endif
+        /// </exception>
         public void Attach(DependencyObject dependencyObject)
         {
             if (dependencyObject is not T typed)
@@ -53,8 +91,12 @@ namespace Dreamine.MVVM.Behaviors.Core.Base
         }
 
         /// <summary>
-        /// 현재 연결된 객체와의 연결을 해제합니다.
-        /// <c>OnDetaching()</c>이 호출되고, <c>AssociatedObject</c>는 null로 초기화됩니다.
+        /// \if KO
+        /// <para>현재 연결된 객체와의 연결을 해제합니다. <c>OnDetaching()</c>이 호출되고, <c>AssociatedObject</c>는 null로 초기화됩니다.</para>
+        /// \endif
+        /// \if EN
+        /// <para>Detaches the behavior from its current target object.</para>
+        /// \endif
         /// </summary>
         public void Detach()
 		{
@@ -63,26 +105,45 @@ namespace Dreamine.MVVM.Behaviors.Core.Base
 		}
 
 		/// <summary>
-		/// Behavior가 연결되었을 때 호출되는 확장 포인트입니다.
-		/// 하위 클래스에서 오버라이딩하여 부가 작업을 수행할 수 있습니다.
+		/// \if KO
+		/// <para>Behavior가 연결되었을 때 호출되는 확장 포인트입니다. 하위 클래스에서 오버라이딩하여 부가 작업을 수행할 수 있습니다.</para>
+		/// \endif
+		/// \if EN
+		/// <para>Handles the attached event or state change.</para>
+		/// \endif
 		/// </summary>
 		protected virtual void OnAttached()
 		{			
 		}
 
 		/// <summary>
-		/// Behavior가 해제될 때 호출되는 확장 포인트입니다.
-		/// 하위 클래스에서 오버라이딩하여 정리 작업 등을 수행할 수 있습니다.
+		/// \if KO
+		/// <para>Behavior가 해제될 때 호출되는 확장 포인트입니다. 하위 클래스에서 오버라이딩하여 정리 작업 등을 수행할 수 있습니다.</para>
+		/// \endif
+		/// \if EN
+		/// <para>Handles the detaching event or state change.</para>
+		/// \endif
 		/// </summary>
 		protected virtual void OnDetaching()
 		{			
 		}
 
 		/// <summary>
-		/// WPF Freezable 객체를 생성하기 위한 팩토리 메서드입니다.
-		/// <c>Activator.CreateInstance()</c>를 사용하므로 기본 생성자가 반드시 필요합니다.
+		/// \if KO
+		/// <para>WPF Freezable 객체를 생성하기 위한 팩토리 메서드입니다. <c>Activator.CreateInstance()</c>를 사용하므로 기본 생성자가 반드시 필요합니다.</para>
+		/// \endif
+		/// \if EN
+		/// <para>Creates the instance core value.</para>
+		/// \endif
 		/// </summary>
-		/// <returns>현재 클래스 타입의 새로운 인스턴스</returns>
+		/// <returns>
+		/// \if KO
+		/// <para>현재 클래스 타입의 새로운 인스턴스</para>
+		/// \endif
+		/// \if EN
+		/// <para>The <see cref="Freezable"/> result produced by the create instance core operation.</para>
+		/// \endif
+		/// </returns>
 		protected override Freezable CreateInstanceCore()
 		{
 			return (Freezable)Activator.CreateInstance(GetType())!;
